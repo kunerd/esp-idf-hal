@@ -415,7 +415,8 @@ impl<'d> I2cDriver<'d> {
         command_link: &CommandLink,
         timeout: TickType_t,
     ) -> Result<(), EspError> {
-        esp!(unsafe { i2c_master_cmd_begin(self.port(), command_link.0, timeout) })
+        let timeout: TickType = Duration::from_millis(35).into(); // same as SMBus
+        esp!(unsafe { i2c_master_cmd_begin(self.port(), command_link.0, timeout.ticks()) })
     }
 
     pub fn port(&self) -> i2c_port_t {
